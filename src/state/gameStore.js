@@ -26,7 +26,7 @@ const useGameStore = create((set, get) => ({
   score: 0,
   level: 1,
   linesCleared: 0,
-  gameState: 'StartScreen', // 'Playing', 'Paused', 'GameOver'
+  gameState: 'StartScreen', // 'Playing', 'Paused', 'GameOver', 'Demo'
 
   // --- Basic Setters (Internal use or direct updates) ---
   _setGridState: (newGridState) => set({ grid: newGridState }),
@@ -35,6 +35,8 @@ const useGameStore = create((set, get) => ({
 
   // --- Game Flow Actions ---
   startGame: () => {
+    // Prevent starting if already playing or in demo
+    if (get().gameState === 'Playing' || get().gameState === 'Demo') return;
     console.log("[gameStore] startGame called"); // Log action call
     const firstPiece = get().nextPiece; // Use the pre-generated next piece
     const nextPiece = createNewPiece(); // Generate the new next piece
@@ -77,8 +79,43 @@ const useGameStore = create((set, get) => ({
 
   endGame: () => {
     console.log("[gameStore] endGame called"); // Log action call
-    set({ gameState: 'GameOver' });
+    // If ending from Demo, go back to StartScreen, otherwise GameOver
+    const previousState = get().gameState;
+    set({ gameState: previousState === 'Demo' ? 'StartScreen' : 'GameOver' });
   },
+
+  startDemo: () => {
+     // Prevent starting if already playing or in demo
+    if (get().gameState === 'Playing' || get().gameState === 'Demo') return;
+    console.log("[gameStore] startDemo called");
+    const firstPiece = createNewPiece(); // Generate fresh pieces for demo
+    const nextPiece = createNewPiece();
+    set({
+      grid: createNewGrid(), // Reset grid
+      currentPiece: firstPiece,
+      nextPiece: nextPiece,
+      score: 0,
+      level: 1, // Start demo at level 1
+      linesCleared: 0,
+      gameState: 'Demo', // Set state to Demo
+    });
+     // Initial validation check (same as startGame)
+    const currentGrid = get().grid;
+    const currentPieceAfterSet = get().currentPiece;
+    if (!currentPieceAfterSet || !isValidPosition(currentGrid, currentPieceAfterSet)) {
+        console.warn("[gameStore] startDemo: Initial position invalid! Stopping demo.");
+        get().stopDemo();
+    } else {
+        console.log("[gameStore] startDemo: Initial position valid.");
+    }
+  },
+
+  stopDemo: () => {
+    if (get().gameState !== 'Demo') return;
+    console.log("[gameStore] stopDemo called");
+    set({ gameState: 'StartScreen', currentPiece: null }); // Go back to start screen, clear piece
+  },
+
 
   // --- Piece Management Actions ---
   spawnNewPiece: () => {
