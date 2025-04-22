@@ -1,0 +1,144 @@
+/* src/App.css */
+body {
+  font-family: sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items to the top */
+  min-height: 100vh;
+  padding-top: 20px; /* Add some padding at the top */
+}
+
+.App {
+  text-align: center;
+  width: 90%;
+  max-width: 1200px; /* Limit overall width */
+}
+
+h1 {
+  color: #444;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: row; /* Arrange canvas and UI side-by-side */
+  justify-content: center; /* Center items horizontally */
+  align-items: flex-start; /* Align items to the top of the container */
+  margin-top: 20px;
+  gap: 20px; /* Space between game area and UI panel */
+}
+
+.game-area {
+  position: relative; /* Needed for absolute positioning of game state message */
+  width: 70%; /* Adjust as needed */
+  max-width: 600px; /* Example max width */
+  /* aspect-ratio: 1 / 1.5; */ /* Removed aspect-ratio */
+  height: 80vh; /* Set an explicit height, e.g., 80% of viewport height */
+  max-height: 800px; /* Optional: Add a max-height */
+  background-color: #222; /* Slightly lighter fallback background */
+  border: 1px solid #555;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Ensure the canvas container div takes up the full space */
+/* This targets the div created by React for the TetrisCanvas component */
+.game-area > div:first-of-type {
+  width: 100%;
+  height: 100%;
+}
+
+
+.ui-panel {
+  width: 25%; /* Adjust as needed */
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-display {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 3px;
+  text-align: left;
+}
+
+.controls button {
+  padding: 10px 15px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.controls button:hover {
+  background-color: #45a049;
+}
+
+.game-state-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 5px;
+  font-size: 1.5em;
+  font-weight: bold;
+  z-index: 10; /* Ensure it's above the canvas */
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Basic responsive adjustments */
+@media (max-width: 768px) {
+  .game-container {
+    flex-direction: column; /* Stack canvas and UI on smaller screens */
+    align-items: center; /* Center items when stacked */
+  }
+
+  .game-area {
+    width: 90%; /* Take more width */
+    max-width: 500px; /* Adjust max width */
+    height: 70vh; /* Adjust height for smaller screens */
+  }
+
+  .ui-panel {
+    width: 90%; /* Take more width */
+    max-width: 500px; /* Match game area width */
+    margin-top: 20px;
+  }
+}
+
+/* Styles for NextPiecePreview (previously the only content) */
+.next-piece-preview {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 3px;
+  text-align: center; /* Center the 'Next' title */
+}
+
+.next-piece-preview h4 {
+  margin: 0 0 5px 0; /* Adjust spacing for the title */
+  color: #555;
+}
+
+.next-piece-preview > div { /* Target the div holding the canvas */
+  background-color: #eee; /* Background for the preview canvas area */
+  border-radius: 3px;
+  margin: 0 auto; /* Center the canvas div if needed */
+  max-width: 100px; /* Limit width of the preview canvas */
+  height: 100px; /* Explicit height for the canvas container */
+}

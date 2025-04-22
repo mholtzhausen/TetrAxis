@@ -1,0 +1,81 @@
+// src/App.jsx
+import React from 'react';
+import TetrisCanvas from './rendering/TetrisCanvas';
+import useGameStore from './state/gameStore';
+import NextPiecePreview from './components/NextPiecePreview'; // Import the new component
+import './App.css'; // We'll create this for basic styling
+
+// Basic UI Components (can be moved to separate files later)
+
+const ScoreDisplay = () => {
+  const score = useGameStore((state) => state.score);
+  return <div className="info-display">Score: {score}</div>;
+};
+
+const LevelDisplay = () => {
+  const level = useGameStore((state) => state.level);
+  return <div className="info-display">Level: {level}</div>;
+};
+
+const GameStateDisplay = () => {
+  const gameState = useGameStore((state) => state.gameState);
+  let message = '';
+  switch (gameState) {
+    case 'StartScreen':
+      message = 'Press Enter to Start';
+      break;
+    case 'Paused':
+      message = 'Paused (Press P to Resume)';
+      break;
+    case 'GameOver':
+      message = 'Game Over! (Press Enter to Restart)';
+      break;
+    default:
+      message = ''; // Playing state doesn't need a persistent message
+  }
+  return message ? <div className="game-state-message">{message}</div> : null;
+};
+
+const Controls = () => {
+  // Select only the state needed for conditional rendering
+  const gameState = useGameStore((state) => state.gameState);
+  // Get actions directly - Zustand ensures stable references for these
+  const startGame = useGameStore((state) => state.startGame);
+  const pauseGame = useGameStore((state) => state.pauseGame);
+  const resumeGame = useGameStore((state) => state.resumeGame);
+
+  return (
+    <div className="controls">
+      {gameState === 'StartScreen' || gameState === 'GameOver' ? (
+        <button onClick={startGame}>Start Game</button>
+      ) : gameState === 'Playing' ? (
+        <button onClick={pauseGame}>Pause (P)</button>
+      ) : gameState === 'Paused' ? (
+        <button onClick={resumeGame}>Resume (P)</button>
+      ) : null}
+    </div>
+  );
+};
+
+
+function App() {
+  return (
+    <div className="App">
+      <h1>WebGL 3D Tetris</h1>
+      <div className="game-container">
+        <div className="game-area">
+           <GameStateDisplay />
+           <TetrisCanvas />
+        </div>
+        <div className="ui-panel">
+          <ScoreDisplay />
+          <LevelDisplay />
+          <NextPiecePreview /> {/* Add the preview component */}
+          <Controls />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
