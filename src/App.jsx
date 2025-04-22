@@ -3,6 +3,7 @@ import React from 'react';
 import TetrisCanvas from './rendering/TetrisCanvas';
 import useGameStore from './state/gameStore';
 import NextPiecePreview from './components/NextPiecePreview'; // Import the new component
+import useAIDemoLoop from './hooks/useAIDemoLoop'; // Import the AI loop hook
 import './App.css'; // We'll create this for basic styling
 
 // Basic UI Components (can be moved to separate files later)
@@ -73,6 +74,8 @@ const Controls = () => {
 
 
 function App() {
+  useAIDemoLoop(); // Initialize the AI demo loop hook
+
   return (
     <div className="App">
       {/* Title moved to UI Panel */}
