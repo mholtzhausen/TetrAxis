@@ -6,6 +6,7 @@ import useGameStore from '../state/gameStore'; // Import the store hook
 import useInputHandler from '../hooks/useInputHandler'; // Import input handler hook
 import useGameLoop from '../hooks/useGameLoop'; // Import game loop hook
 import { COLORS } from '../game/pieces/TetrominoData'; // Import colors for blocks
+import { calculateGhostPosition } from '../game/Collision.js'; // Import ghost calculation
 
 // --- Constants ---
 const BLOCK_SIZE = 1; // Size of each cube
@@ -19,6 +20,13 @@ export const BLOCK_MATERIALS = Object.keys(COLORS).reduce((acc, key) => { // Exp
 }, {});
 // Material for settled blocks (using color from grid)
 const SETTLED_MATERIAL = new THREE.MeshLambertMaterial({ vertexColors: false }); // Set to false to use instance color
+// Material for the ghost piece
+const GHOST_MATERIAL = new THREE.MeshBasicMaterial({
+    color: 0x888888, // Grey
+    transparent: true,
+    opacity: 0.3, // Adjust as needed
+    depthWrite: false // Helps prevent z-fighting with the actual piece
+});
 
 const TetrisCanvas = () => {
   const mountRef = useRef(null);
@@ -28,6 +36,7 @@ const TetrisCanvas = () => {
   const controlsRef = useRef(null); // Ref to store controls instance
   const animationFrameIdRef = useRef(null);
   const currentPieceMeshGroupRef = useRef(null); // Group for current piece blocks
+  const ghostPieceMeshGroupRef = useRef(null); // Group for ghost piece blocks
   const settledBlocksMeshRef = useRef(null); // InstancedMesh for settled blocks
 
   // Subscribe to store state needed for rendering updates
@@ -93,25 +102,55 @@ const TetrisCanvas = () => {
     gridHelper.position.set(gridCenterX - BLOCK_SIZE / 2, -BLOCK_SIZE / 2, gridCenterZ - BLOCK_SIZE / 2); // Position (4.5, -0.5, 4.5)
     scene.add(gridHelper);
 
-    // Bounding Box Outline (Edges)
-    const boxGeometry = new THREE.BoxGeometry(gridWidth, gridHeight, gridDepth);
-    const edges = new THREE.EdgesGeometry(boxGeometry); // Use EdgesGeometry for cleaner lines
-    // Simplify material: Solid black, thin lines
-    const lineMaterial = new THREE.LineBasicMaterial({
-        color: 0x000000, // Black color for max contrast
-        // transparent: true, // Removed
-        // opacity: 0.8, // Removed
-        // linewidth: 2 // Removed
-    });
-    const boundingEdges = new THREE.LineSegments(edges, lineMaterial);
-    boundingEdges.position.set(gridCenterX - BLOCK_SIZE / 2, gridCenterY - BLOCK_SIZE / 2, gridCenterZ - BLOCK_SIZE / 2); // Position (4.5, 9.5, 4.5)
-    scene.add(boundingEdges);
+    // Semi-Transparent Bounding Box Panes (Hollow Tube with varying opacity)
+    const basePaneMaterialConfig = {
+        color: 0xaaaaaa, // Light grey color
+        transparent: true,
+        side: THREE.DoubleSide // Render both sides
+    };
+
+    // Create 4 materials with different opacities
+    const materialPosX = new THREE.MeshBasicMaterial({ ...basePaneMaterialConfig, opacity: 0.15 });
+    const materialNegX = new THREE.MeshBasicMaterial({ ...basePaneMaterialConfig, opacity: 0.20 });
+    const materialPosZ = new THREE.MeshBasicMaterial({ ...basePaneMaterialConfig, opacity: 0.25 });
+    const materialNegZ = new THREE.MeshBasicMaterial({ ...basePaneMaterialConfig, opacity: 0.30 });
+
+
+    // Create 4 planes for the sides
+    const planeXGeometry = new THREE.PlaneGeometry(gridDepth, gridHeight); // For sides along X axis
+    const planeZGeometry = new THREE.PlaneGeometry(gridWidth, gridHeight); // For sides along Z axis
+
+    // +X Side
+    const panePosX = new THREE.Mesh(planeXGeometry, materialPosX); // Use unique material
+    panePosX.rotation.y = -Math.PI / 2;
+    panePosX.position.set(gridWidth - BLOCK_SIZE / 2, gridCenterY - BLOCK_SIZE / 2, gridCenterZ - BLOCK_SIZE / 2); // x=9.5, y=9.5, z=4.5
+    scene.add(panePosX);
+
+    // -X Side
+    const paneNegX = new THREE.Mesh(planeXGeometry, materialNegX); // Use unique material
+    paneNegX.rotation.y = Math.PI / 2;
+    paneNegX.position.set(-BLOCK_SIZE / 2, gridCenterY - BLOCK_SIZE / 2, gridCenterZ - BLOCK_SIZE / 2); // x=-0.5, y=9.5, z=4.5
+    scene.add(paneNegX);
+
+    // +Z Side
+    const panePosZ = new THREE.Mesh(planeZGeometry, materialPosZ); // Use unique material
+    // No rotation needed
+    panePosZ.position.set(gridCenterX - BLOCK_SIZE / 2, gridCenterY - BLOCK_SIZE / 2, gridDepth - BLOCK_SIZE / 2); // x=4.5, y=9.5, z=9.5
+    scene.add(panePosZ);
+
+    // -Z Side
+    const paneNegZ = new THREE.Mesh(planeZGeometry, materialNegZ); // Use unique material
+    paneNegZ.rotation.y = Math.PI;
+    paneNegZ.position.set(gridCenterX - BLOCK_SIZE / 2, gridCenterY - BLOCK_SIZE / 2, -BLOCK_SIZE / 2); // x=4.5, y=9.5, z=-0.5
+    scene.add(paneNegZ);
     // scene.add(boxMesh);
 
 
     // 6. Setup Mesh Groups/Instanced Meshes
     currentPieceMeshGroupRef.current = new THREE.Group();
     scene.add(currentPieceMeshGroupRef.current);
+    ghostPieceMeshGroupRef.current = new THREE.Group(); // Initialize ghost group
+    scene.add(ghostPieceMeshGroupRef.current); // Add ghost group to scene
 
     // Use InstancedMesh for potentially many settled blocks
     // Max count assumes a full grid
@@ -199,6 +238,7 @@ const TetrisCanvas = () => {
       // BLOCK_GEOMETRY.dispose();
       // Dispose shared materials
       Object.values(BLOCK_MATERIALS).forEach(mat => mat.dispose());
+      GHOST_MATERIAL.dispose(); // Dispose ghost material
       // Dispose the material used by the InstancedMesh
       if (settledBlocksMeshRef.current?.material) {
           settledBlocksMeshRef.current.material.dispose();
@@ -214,6 +254,7 @@ const TetrisCanvas = () => {
       cameraRef.current = null;
       controlsRef.current = null; // Clear controls ref
       currentPieceMeshGroupRef.current = null;
+      ghostPieceMeshGroupRef.current = null; // Clear ghost group ref
       settledBlocksMeshRef.current = null;
     };
   }, []); // Empty dependency array: Run setup only once on mount
@@ -221,11 +262,12 @@ const TetrisCanvas = () => {
   // Effect for updating meshes based on game state
   useEffect(() => {
     const pieceGroup = currentPieceMeshGroupRef.current;
+    const ghostGroup = ghostPieceMeshGroupRef.current; // Get ghost group ref
     const settledMesh = settledBlocksMeshRef.current;
     const scene = sceneRef.current;
 
-    if (!pieceGroup || !settledMesh || !scene) return;
-    console.log("[TetrisCanvas] Updating meshes. GameState:", gameState, "CurrentPiece:", !!currentPiece, "Grid updated:", grid); // Log state
+    if (!pieceGroup || !ghostGroup || !settledMesh || !scene) return; // Check ghostGroup ref too
+    // console.log("[TetrisCanvas] Updating meshes. GameState:", gameState, "CurrentPiece:", !!currentPiece, "Grid updated:", grid); // Log state (can be noisy)
 
     // --- Update Current Piece ---
     // Clear previous piece blocks efficiently
@@ -250,6 +292,29 @@ const TetrisCanvas = () => {
     } else {
        // console.log("[TetrisCanvas] No current piece to render.");
     }
+
+    // --- Update Ghost Piece ---
+    // Clear previous ghost blocks
+    while (ghostGroup.children.length > 0) {
+        ghostGroup.remove(ghostGroup.children[0]);
+    }
+
+    // Calculate and add new ghost blocks if piece exists and game is playing
+    if (currentPiece && gameState === 'Playing') {
+        const ghostPiece = calculateGhostPosition(grid, currentPiece);
+        if (ghostPiece) {
+            const ghostWorldCoords = ghostPiece.getWorldBlockCoordinates();
+            // console.log(`[TetrisCanvas] Ghost piece type: ${ghostPiece.type}, Coords:`, ghostWorldCoords.map(c => `(${Math.round(c.x)},${Math.round(c.y)},${Math.round(c.z)})`).join(' '));
+
+            ghostWorldCoords.forEach(coord => {
+                const ghostBlockMesh = new THREE.Mesh(BLOCK_GEOMETRY, GHOST_MATERIAL);
+                const pos = new THREE.Vector3(Math.round(coord.x), Math.round(coord.y), Math.round(coord.z));
+                ghostBlockMesh.position.copy(pos);
+                ghostGroup.add(ghostBlockMesh);
+            });
+        }
+    }
+
 
     // --- Update Settled Blocks ---
     const matrix = new THREE.Matrix4();

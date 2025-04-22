@@ -136,7 +136,7 @@ h1 {
 }
 
 .next-piece-preview > div { /* Target the div holding the canvas */
-  background-color: #eee; /* Background for the preview canvas area */
+  /* background-color: #eee; */ /* Remove background color */
   border-radius: 3px;
   margin: 0 auto; /* Center the canvas div if needed */
   max-width: 100px; /* Limit width of the preview canvas */

@@ -61,13 +61,14 @@ const Controls = () => {
 function App() {
   return (
     <div className="App">
-      <h1>WebGL 3D Tetris</h1>
+      {/* Title moved to UI Panel */}
       <div className="game-container">
         <div className="game-area">
            <GameStateDisplay />
            <TetrisCanvas />
         </div>
         <div className="ui-panel">
+          <h1>TetrAxis</h1> {/* New Title */}
           <ScoreDisplay />
           <LevelDisplay />
           <NextPiecePreview /> {/* Add the preview component */}

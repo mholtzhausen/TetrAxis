@@ -4,7 +4,7 @@ import useGameStore from '../state/gameStore';
 import * as THREE from 'three';
 
 // Base interval time (milliseconds) for level 1
-const BASE_INTERVAL = 1000;
+const BASE_INTERVAL = 3000; // Slower start: 3 seconds per step at level 1
 // How much faster each level gets (adjust as needed)
 const LEVEL_SPEED_MULTIPLIER = 0.85; // e.g., level 2 is 85% of level 1 interval
 

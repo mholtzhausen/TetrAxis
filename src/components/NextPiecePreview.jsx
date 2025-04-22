@@ -23,7 +23,7 @@ const NextPiecePreview = () => {
 
     // 1. Scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xdddddd); // Lighter background for preview
+    scene.background = null; // Set background to null for transparency
     sceneRef.current = scene;
 
     // 2. Camera (Orthographic might be better for consistent size)

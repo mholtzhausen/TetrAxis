@@ -1,4 +1,5 @@
 // src/game/Collision.js
+import * as THREE from 'three'; // Add this import
 
 /**
  * Checks if the piece's current position and orientation are valid within the grid.
@@ -40,6 +41,31 @@ export const isValidPosition = (grid, piece) => {
   // If all blocks are in valid positions
   return true;
 };
+
+/**
+ * Calculates the final resting position of a piece if dropped straight down.
+ * @param {Grid} grid - The game grid.
+ * @param {Piece} piece - The piece to drop.
+ * @returns {Piece | null} A new Piece object representing the ghost piece at its final position, or null if no piece provided.
+ */
+export function calculateGhostPosition(grid, piece) {
+  if (!piece) return null; // No piece, no ghost
+
+  let ghostPiece = piece.clone(); // Start with the current piece position
+
+  // Move down step by step until an invalid position is found
+  while (true) {
+    const testPiece = ghostPiece.clone();
+    testPiece.move(new THREE.Vector3(0, -1, 0)); // Try moving down one step
+    if (isValidPosition(grid, testPiece)) {
+      ghostPiece = testPiece; // If valid, update the ghost position
+    } else {
+      break; // If invalid, the previous position was the final one
+    }
+  }
+  return ghostPiece;
+}
+
 
 // Example usage (conceptual - would be in GameController or similar):
 /*
