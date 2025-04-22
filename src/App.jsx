@@ -43,16 +43,30 @@ const Controls = () => {
   const startGame = useGameStore((state) => state.startGame);
   const pauseGame = useGameStore((state) => state.pauseGame);
   const resumeGame = useGameStore((state) => state.resumeGame);
+  const startDemo = useGameStore((state) => state.startDemo); // Get demo actions
+  const stopDemo = useGameStore((state) => state.stopDemo);
 
   return (
     <div className="controls">
-      {gameState === 'StartScreen' || gameState === 'GameOver' ? (
-        <button onClick={startGame}>Start Game</button>
-      ) : gameState === 'Playing' ? (
+      {/* Show Start/Demo buttons when not playing */}
+      {(gameState === 'StartScreen' || gameState === 'GameOver') && (
+        <>
+          <button onClick={startGame}>Start Game</button>
+          <button onClick={startDemo}>Run Demo</button>
+        </>
+      )}
+      {/* Show Pause button when playing */}
+      {gameState === 'Playing' && (
         <button onClick={pauseGame}>Pause (P)</button>
-      ) : gameState === 'Paused' ? (
+      )}
+      {/* Show Resume button when paused */}
+      {gameState === 'Paused' && (
         <button onClick={resumeGame}>Resume (P)</button>
-      ) : null}
+      )}
+      {/* Show Stop Demo button when in demo mode */}
+      {gameState === 'Demo' && (
+        <button onClick={stopDemo}>Stop Demo</button>
+      )}
     </div>
   );
 };
