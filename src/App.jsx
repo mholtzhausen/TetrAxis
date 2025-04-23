@@ -26,7 +26,7 @@ const GameStateDisplay = () => {
       message = 'Press Enter to Start';
       break;
     case 'Paused':
-      message = 'Paused (Press P to Resume)';
+      message = 'Paused (Press Enter to Resume)';
       break;
     case 'GameOver':
       message = 'Game Over! (Press Enter to Restart)';
@@ -50,20 +50,20 @@ const Controls = () => {
   return (
     <div className="controls">
       {/* Show Start/Demo buttons when not playing */}
-      {(gameState === 'StartScreen' || gameState === 'GameOver') && (
+      {/* Start Game button removed - handled by Enter key */}
+      {/* {(gameState === 'StartScreen' || gameState === 'GameOver') && (
         <>
           <button onClick={startGame}>Start Game</button>
           {/* <button onClick={startDemo}>Run Demo</button> */} {/* Removed */}
-        </>
-      )}
-      {/* Show Pause button when playing */}
-      {gameState === 'Playing' && (
+        {/* </>
+      )} */}
+      {/* Pause/Resume buttons removed - handled by Enter key */}
+      {/* {gameState === 'Playing' && (
         <button onClick={pauseGame}>Pause (P)</button>
-      )}
-      {/* Show Resume button when paused */}
-      {gameState === 'Paused' && (
+      )} */}
+      {/* {gameState === 'Paused' && (
         <button onClick={resumeGame}>Resume (P)</button>
-      )}
+      )} */}
       {/* Demo controls removed */}
       {/* {gameState === 'Demo' && (
         <button onClick={stopDemo}>Stop Demo</button>

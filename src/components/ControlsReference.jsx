@@ -11,9 +11,9 @@ const ControlsReference = () => {
         <li><strong>Q/E:</strong> Rotate Y <RotatingCube axis="y" /></li>
         <li><strong>R:</strong> Rotate X <RotatingCube axis="x" /></li>
         <li><strong>F:</strong> Rotate Z <RotatingCube axis="z" /></li>
-        <li><strong>Space:</strong> Drop Down</li> {/* Changed from Hard Drop for clarity */}
-        <li><strong>P:</strong> Pause/Resume</li>
-        <li><strong>Enter:</strong> Start/Restart</li>
+        <li><strong>Space:</strong> Drop Down</li>
+        {/* <li><strong>P:</strong> Pause/Resume</li> Removed */}
+        <li><strong>Enter:</strong> Start/Pause/Resume/Restart</li>
         <li><strong>Mouse Wheel:</strong> Zoom View</li>
         <li><strong>Middle Mouse + Drag:</strong> Rotate View</li>
       </ul>

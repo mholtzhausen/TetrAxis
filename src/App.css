@@ -63,6 +63,16 @@ h1 {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Style the title within the UI panel */
+.ui-panel h1 {
+  font-size: 1.8em; /* Make title smaller */
+  margin-top: 0; /* Remove top margin */
+  margin-bottom: 10px; /* Reduce bottom margin */
+  padding-bottom: 8px; /* Add padding below text */
+  border-bottom: 1px solid #ccc; /* Add a subtle separator line */
+  color: #555; /* Slightly darker color */
+}
+
 .info-display {
   font-size: 1.2em;
   font-weight: bold;

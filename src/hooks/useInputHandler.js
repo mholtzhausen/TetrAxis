@@ -85,27 +85,40 @@ const useInputHandler = () => {
             break;
 
           // Game State
-          case 'p': // Pause/Resume
-             event.preventDefault();
-             pauseGame();
-             break;
+          case 'Enter': // Pause when playing
+            event.preventDefault();
+            pauseGame();
+            break;
 
           default:
             break;
         }
       } else if (gameState === 'Paused') {
-          // Allow resuming from pause
-          if (event.key === 'p') {
+          // Allow resuming from pause with Enter
+          if (event.key === 'Enter') {
               event.preventDefault();
               resumeGame();
           }
+          // Allow resuming with P as well? (Decide if needed)
+          // else if (event.key === 'p') {
+          //     event.preventDefault();
+          //     resumeGame();
+          // }
       } else if (gameState === 'StartScreen' || gameState === 'GameOver') {
-          // Allow starting the game
+          // Allow starting/restarting the game with Enter
           if (event.key === 'Enter') {
               event.preventDefault();
               startGame();
           }
       }
+      // Redundant 'Playing' check removed, handled in the main switch now.
+      // else if (gameState === 'Playing') {
+      //     // Allow pausing with Enter when playing
+      //     if (event.key === 'Enter') {
+      //         event.preventDefault();
+      //         pauseGame();
+      //     }
+      // }
     };
 
     window.addEventListener('keydown', handleKeyDown);
