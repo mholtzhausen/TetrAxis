@@ -5,7 +5,7 @@
   padding: 10px;
   border-radius: 5px;
   margin-top: 15px; /* Add some space above */
-  color: #eee; /* Light text color */
+  color: #aaa; /* Even darker base text color */
 }
 
 .controls-reference h2 {
@@ -32,7 +32,8 @@
 }
 
 .controls-reference strong {
-  color: #fff; /* White color for emphasis */
+  color: #333; /* Dark color for key names */
+  font-weight: bold; /* Make keys bolder */
   min-width: 100px; /* Align text */
   display: inline-block;
 }

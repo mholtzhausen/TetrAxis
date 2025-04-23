@@ -90,8 +90,8 @@ function App() {
           <LevelDisplay />
           <NextPiecePreview /> {/* Add the preview component */}
           <Controls />
-        </div>
           <ControlsReference /> {/* Add the controls reference */}
+        </div>
       </div>
     </div>
   );
