@@ -1,5 +1,5 @@
 {
-  "name": "3dtetris",
+  "name": "tetraxis",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
@@ -20,6 +20,7 @@
   },
   "vite": "^6.3.2",
   "devDependencies": {
+    "@tauri-apps/cli": "^2.5.0",
     "@vitejs/plugin-react": "^4.4.1"
   }
 }
