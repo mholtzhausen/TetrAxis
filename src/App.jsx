@@ -3,7 +3,6 @@ import React from 'react';
 import TetrisCanvas from './rendering/TetrisCanvas';
 import useGameStore from './state/gameStore';
 import NextPiecePreview from './components/NextPiecePreview'; // Import the new component
-import useAIDemoLoop from './hooks/useAIDemoLoop'; // Import the AI loop hook
 import './App.css'; // We'll create this for basic styling
 
 // Basic UI Components (can be moved to separate files later)
@@ -44,8 +43,8 @@ const Controls = () => {
   const startGame = useGameStore((state) => state.startGame);
   const pauseGame = useGameStore((state) => state.pauseGame);
   const resumeGame = useGameStore((state) => state.resumeGame);
-  const startDemo = useGameStore((state) => state.startDemo); // Get demo actions
-  const stopDemo = useGameStore((state) => state.stopDemo);
+  // const startDemo = useGameStore((state) => state.startDemo); // Get demo actions - Removed
+  // const stopDemo = useGameStore((state) => state.stopDemo); // Removed
 
   return (
     <div className="controls">
@@ -53,7 +52,7 @@ const Controls = () => {
       {(gameState === 'StartScreen' || gameState === 'GameOver') && (
         <>
           <button onClick={startGame}>Start Game</button>
-          <button onClick={startDemo}>Run Demo</button>
+          {/* <button onClick={startDemo}>Run Demo</button> */} {/* Removed */}
         </>
       )}
       {/* Show Pause button when playing */}
@@ -64,17 +63,17 @@ const Controls = () => {
       {gameState === 'Paused' && (
         <button onClick={resumeGame}>Resume (P)</button>
       )}
-      {/* Show Stop Demo button when in demo mode */}
-      {gameState === 'Demo' && (
+      {/* Demo controls removed */}
+      {/* {gameState === 'Demo' && (
         <button onClick={stopDemo}>Stop Demo</button>
-      )}
+      )} */}
     </div>
   );
 };
 
 
 function App() {
-  useAIDemoLoop(); // Initialize the AI demo loop hook
+  // useAIDemoLoop(); // Initialize the AI demo loop hook - Removed
 
   return (
     <div className="App">
