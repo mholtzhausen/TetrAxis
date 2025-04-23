@@ -1,8 +1,8 @@
 [package]
-name = "app"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "TetrAxis"
+version = "1.0.0"
+description = "A 3D Tetris game fully written by AI in a VibeCoding session"
+authors = ["Gemini 2.5pro, Mark Holtzhausen"]
 license = ""
 repository = ""
 edition = "2021"
