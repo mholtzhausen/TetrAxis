@@ -1,0 +1,53 @@
+/* src/components/ControlsReference.css */
+
+.controls-reference {
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background like NextPiecePreview */
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px; /* Add some space above */
+  color: #eee; /* Light text color */
+}
+
+.controls-reference h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  text-align: center;
+  border-bottom: 1px solid #555;
+  padding-bottom: 5px;
+}
+
+.controls-reference ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.controls-reference li {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controls-reference strong {
+  color: #fff; /* White color for emphasis */
+  min-width: 100px; /* Align text */
+  display: inline-block;
+}
+
+.cube-placeholder {
+  /* Placeholder styling for where the cubes will go */
+  display: inline-block;
+  width: 20px; /* Adjust size as needed */
+  height: 20px;
+  /* background-color: #ccc; */ /* Temporary visual */
+  /* border: 1px solid #888; */
+  margin-left: 10px;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 20px;
+  font-size: 0.7em;
+  color: #aaa;
+}

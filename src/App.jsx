@@ -3,6 +3,7 @@ import React from 'react';
 import TetrisCanvas from './rendering/TetrisCanvas';
 import useGameStore from './state/gameStore';
 import NextPiecePreview from './components/NextPiecePreview'; // Import the new component
+import ControlsReference from './components/ControlsReference'; // Import the controls reference
 import './App.css'; // We'll create this for basic styling
 
 // Basic UI Components (can be moved to separate files later)
@@ -90,6 +91,7 @@ function App() {
           <NextPiecePreview /> {/* Add the preview component */}
           <Controls />
         </div>
+          <ControlsReference /> {/* Add the controls reference */}
       </div>
     </div>
   );
