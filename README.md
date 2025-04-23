@@ -67,3 +67,11 @@ npm run tauri build
 # or
 yarn tauri build
 ```
+
+You can also specify a target architecture using the `--target` flag. For example, to build for Linux x86_64:
+
+```bash
+npm run tauri build -- --target x86_64-unknown-linux-gnu
+# or
+yarn tauri build --target x86_64-unknown-linux-gnu
+```
